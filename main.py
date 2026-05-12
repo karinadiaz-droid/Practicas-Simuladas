@@ -3,13 +3,15 @@ from models.cliente import Cliente
 from models.servicios import ReservaSala, AlquilerEquipo, Asesoria
 from models.reserva import Reserva
 from models.excepciones import ClienteInvalidoError, ServicioNoDisponibleError, ReservaInvalidaError
+#Usamos importación absoluta porque main.py está en el nivel superior y Python busca el paquete models (gracias al archivo __init__.py vacío)
+
 
 class Sistema:
     def __init__(self):
-        self.clientes = []
-        self.servicios = []
-        self.reservas = []
-        self._cargar_ejemplo()
+        self.clientes = [] #lista que almacenará objetos Cliente
+        self.servicios = [] #lista con objetos de servicios concretos (ReservaSala, AlquilerEquipo, Asesoria)
+        self.reservas = [] #lista de objetos Reserva
+        self._cargar_ejemplo() #método privado (por convención, _ al inicio) que carga datos de prueba para que el sistema no empiece vacío.
 
     def _cargar_ejemplo(self):
         # Servicios de ejemplo
@@ -22,14 +24,14 @@ class Sistema:
             Asesoria("Machine Learning", 150, nivel="Master")
         ]
         # Clientes de ejemplo
-        try:
+        try: #Intenta crear dos clientes de ejemplo. Si falla (por ejemplo, si se cambiaran las validaciones), atrapa ClienteInvalidoError y muestra un mensaje. Esto evita que el sistema colapse al inicio
             self.clientes.append(Cliente("Karina Diaz", "karina@mail.com", "3137654321"))
             self.clientes.append(Cliente("Jose Blanco", "jose@mail.com", "3121234567"))
         except ClienteInvalidoError as e:
             print(f"Error cargando ejemplo: {e}")
 
     def menu(self): #con esta parte del código estamos creando lo primero que el usuario va a ver
-        while True:
+        while True: #Bucle infinito que muestra opciones hasta que el usuario elija salir.
             print("\n" + "="*60)
             print("🏢 SISTEMA DE RESERVAS")
             print("="*60)
@@ -59,7 +61,7 @@ class Sistema:
             else:
                 print("❌ Opción inválida")
 
-    def submenu_clientes(self):
+    def submenu_clientes(self): #Gestiona el submenú de clientes. Otro bucle infinito hasta que el usuario elija "Volver" (opción 4).
         while True:
             print("\n" + "-"*40)
             print("CLIENTES")
@@ -118,7 +120,7 @@ class Sistema:
             else:
                 print("Opción inválida")
 
-    def mostrar_servicios(self):
+    def mostrar_servicios(self): #esto es algo similar a la selección de cliente, pero filtrando solo servicios disponibles
         print("\n" + "="*60)
         print("🎯 SERVICIOS DISPONIBLES")
         for s in self.servicios:
@@ -130,10 +132,10 @@ class Sistema:
         if not self.clientes:
             print("❌ No hay clientes registrados. Cree uno primero.")
             return
-        print("\n📋 Clientes:")
+        print("\n📋 Clientes:") 
         for c in self.clientes:
             print(f"  {c.id}. {c.nombre} ({'Activo' if c.activo else 'Inactivo'})")
-        try:
+        try: #se pide ID al usuario, convirtiéndolo a entero con int(). Si no es número, lanza ValueError y se captura
             id_cli = int(input("ID del cliente: "))
             cliente = next((c for c in self.clientes if c.id == id_cli and c.activo), None)
             if not cliente:
@@ -215,15 +217,15 @@ class Sistema:
                 print(r.info())
         input("Presione Enter...")
 
-    def gestionar_reserva(self):
+    def gestionar_reserva(self): #Primero muestra todas las reservas (para que el usuario conozca los IDs)
         if not self.reservas:
             print("No hay reservas.")
             return
         self.mostrar_reservas()
-        try:
+        try: #Pide el ID de la reserva a gestionar
             id_r = int(input("ID de la reserva a gestionar: "))
             reserva = next((r for r in self.reservas if r.id == id_r), None)
-            if not reserva:
+            if not reserva: 
                 print("Reserva no encontrada")
                 return
             print(f"\nEstado actual: {reserva.estado}")
@@ -250,7 +252,7 @@ class Sistema:
             print("ID inválido")
         input("Presione Enter...")
 
-    def demostrar_sobrecarga(self):
+    def demostrar_sobrecarga(self): #Toma el primer servicio (por índice 0, que es la Sala Premium) y muestra diferentes formas de llamar a calcular_costo, con distintos parámetros opcionales
         print("\n" + "="*60)
         print("💰 DEMOSTRACIÓN DE SOBRECARGA DE MÉTODOS")
         print("Un mismo método 'calcular_costo' se comporta diferente según los parámetros\n")
