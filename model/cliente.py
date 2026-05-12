@@ -29,23 +29,27 @@ class Cliente:
         self._nombre = valor.strip().title()
 
     @property
+    def email(self):
+        return self._email
 
-        
+    @email.setter
+    def email(self, valor):
+        patron = r'^[\w\.-]+@[\w\.-]+\w+$'
+        if not re.match(patron, valor):
+            raise ClienteInvalidoError(f"email inválido: '{valor}'")
+        self.email = valor.lower()
 
-        if edad <= 0:
-            raise ValueError("Edad inválida")
+ @property
+    def telefono(self):
+        return self._telefono
 
-        self.__nombre = nombre
-        self.__edad = edad
+    @telefono.setter
+    def telefono(self, valor):
+        if not valor or len(re.sub(r'\D', '', valor)) < 7:
+            raise ClienteInvalidoError(f"Teléfono inválido: '{valor}'. son como mínimo 10 dígitos")
+        self._telefono = valor
 
-    def get_nombre(self):
-        return self.__nombre
+    def info(self):
+        estado = "Activo" if self.activo else "Inactivo"
+        return f"ID:{self.id} | {self.nombre} | {self.email} | {estado}"
 
-    def set_nombre(self, nombre):
-        self.__nombre = nombre
-
-    def get_edad(self):
-        return self.__edad
-
-    def set_edad(self, edad):
-        self.__edad = edad
