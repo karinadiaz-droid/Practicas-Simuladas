@@ -12,7 +12,7 @@ class ServicioNoDisponibleError(SistemaError): #se lanza cuando se intenta reser
                                                # (desactivado por el administrador), o cuando el servicio no existe. Así se distingue de otros errores de reserva.
     """Error cuando un servicio no está disponible"""
     pass
-
+    
 class ReservaInvalidaError(SistemaError): #se lanza cuando los datos de la reserva no cumplen las reglas de negocio como]: cliente inactivo, duración no positiva, o cualquier otra inconsistencia
     """Error en la creación o gestión de reservas"""
     pass
