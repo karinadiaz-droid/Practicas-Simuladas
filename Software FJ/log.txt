@@ -1,0 +1,12 @@
+[2026-05-16 23:20:39] INFO: El sistema modular se inició correctamente.
+[2026-05-16 23:20:39] ERROR OPERACIONAL: El correo 'email_invalido.com' no es un formato válido.
+[2026-05-16 23:20:39] ERROR OPERACIONAL: El alquiler de salas debe ser entre 1 y 12 horas.
+[2026-05-16 23:20:39] ERROR OPERACIONAL: No quedan unidades de este equipo en el inventario.
+[2026-05-16 23:20:39] ERROR OPERACIONAL: Las asesorías requieren de un agendamiento mínimo de 2 horas.
+[2026-05-16 23:20:39] ERROR OPERACIONAL: Error: No se puede cancelar una reserva que ya fue completada.
+[2026-05-16 23:40:50] INFO: El sistema modular se inició correctamente.
+[2026-05-16 23:40:50] ERROR OPERACIONAL: El correo 'email_invalido.com' no es un formato válido.
+[2026-05-16 23:40:50] ERROR OPERACIONAL: El alquiler de salas debe ser entre 1 y 12 horas.
+[2026-05-16 23:40:50] ERROR OPERACIONAL: No quedan unidades de este equipo en el inventario.
+[2026-05-16 23:40:50] ERROR OPERACIONAL: Las asesorías requieren de un agendamiento mínimo de 2 horas.
+[2026-05-16 23:40:50] ERROR OPERACIONAL: Error: No se puede cancelar una reserva que ya fue completada.
