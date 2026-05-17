@@ -6,7 +6,6 @@
 # =========================
 # IMPORTACIONES
 # =========================
-
 from modelo.cliente import Cliente
 from modelo.servicios import ReservaSala, AlquilerEquipo, Asesoria
 from modelo.reserva import Reserva
@@ -14,6 +13,12 @@ from modelo.excepciones import (
     ClienteInvalidoError,
     ServicioNoDisponibleError,
     ReservaInvalidaError
+)
+import logging
+logging.basicConfig(
+    filename='sistema.log',
+    level=logging.ERROR,
+    format='%(asctime)s - %(levelname)s - %(message)s'
 )
 # =========================
 # CONFIGURACIÓN DE LOGS
@@ -114,11 +119,11 @@ class Sistema:
                 )
             )
 
-        except ClienteInvalidoError as e:
+     except ClienteInvalidoError as e:
 
-            logging.error(e)
+    logging.error(e)
 
-            print(f"❌ Error cargando ejemplos: {e}")
+    print(f"❌ Error: {e}")
 
     # =====================================================
     # MENÚ PRINCIPAL
