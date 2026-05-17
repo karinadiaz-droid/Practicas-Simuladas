@@ -7,23 +7,14 @@
 # IMPORTACIONES
 # =========================
 
-import logging
-from datetime import datetime, timedelta
-
-from models.cliente import Cliente
-from models.servicios import (
-    ReservaSala,
-    AlquilerEquipo,
-    Asesoria
-)
-from models.reserva import Reserva
-
-from models.excepciones import (
+from modelo.cliente import Cliente
+from modelo.servicios import ReservaSala, AlquilerEquipo, Asesoria
+from modelo.reserva import Reserva
+from modelo.excepciones import (
     ClienteInvalidoError,
     ServicioNoDisponibleError,
     ReservaInvalidaError
 )
-
 # =========================
 # CONFIGURACIÓN DE LOGS
 # =========================
