@@ -1,44 +1,23 @@
-# =========================================================
-# SISTEMA INTEGRAL DE GESTIÓN DE RESERVAS - SOFTWARE FJ
-# Archivo principal: main.py
-# =========================================================
+from datetime import datetime, timedelta
+import logging
 
-# =========================
-# IMPORTACIONES
-# =========================
-from modelo.cliente import Cliente
-from modelo.servicios import ReservaSala, AlquilerEquipo, Asesoria
-from modelo.reserva import Reserva
-from modelo.excepciones import (
+from model.cliente import Cliente
+from model.servicios import ReservaSala, AlquilerEquipo, Asesoria
+from model.reserva import Reserva
+from model.excepciones import (
     ClienteInvalidoError,
     ServicioNoDisponibleError,
     ReservaInvalidaError
 )
-import logging
-logging.basicConfig(
-    filename='sistema.log',
-    level=logging.ERROR,
-    format='%(asctime)s - %(levelname)s - %(message)s'
-)
-# =========================
 # CONFIGURACIÓN DE LOGS
-# =========================
-
 logging.basicConfig(
     filename='sistema.log',
     level=logging.ERROR,
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 
-# =========================================================
-# CLASE PRINCIPAL DEL SISTEMA
-# =========================================================
 
 class Sistema:
-
-    # =====================================================
-    # CONSTRUCTOR
-    # =====================================================
 
     def __init__(self):
 
@@ -48,15 +27,10 @@ class Sistema:
 
         self._cargar_ejemplo()
 
-    # =====================================================
+    # ==========================
     # CARGAR DATOS DE EJEMPLO
-    # =====================================================
-
+    # ==========================
     def _cargar_ejemplo(self):
-
-        # -------------------------
-        # Servicios de ejemplo
-        # -------------------------
 
         self.servicios = [
 
@@ -97,10 +71,6 @@ class Sistema:
             )
         ]
 
-        # -------------------------
-        # Clientes de ejemplo
-        # -------------------------
-
         try:
 
             self.clientes.append(
@@ -119,22 +89,21 @@ class Sistema:
                 )
             )
 
-     except ClienteInvalidoError as e:
+        except ClienteInvalidoError as e:
 
-    logging.error(e)
+            logging.error(e)
 
-    print(f"❌ Error: {e}")
+            print(f"❌ Error cargando ejemplos: {e}")
 
-    # =====================================================
+    # ==========================
     # MENÚ PRINCIPAL
-    # =====================================================
-
+    # ==========================
     def menu(self):
 
         while True:
 
             print("\n" + "=" * 60)
-            print("🏢 SISTEMA DE GESTIÓN DE RESERVAS")
+            print("🏢 SISTEMA DE RESERVAS SOFTWARE FJ")
             print("=" * 60)
 
             print("1. Gestionar Clientes")
@@ -145,124 +114,55 @@ class Sistema:
             print("6. Demostrar Sobrecarga")
             print("7. Salir")
 
-            opcion = input("👉 Seleccione una opción: ")
+            op = input("👉 Opción: ")
 
-            if opcion == '1':
-
+            if op == '1':
                 self.submenu_clientes()
 
-            elif opcion == '2':
-
+            elif op == '2':
                 self.mostrar_servicios()
 
-            elif opcion == '3':
-
+            elif op == '3':
                 self.nueva_reserva()
 
-            elif opcion == '4':
-
+            elif op == '4':
                 self.mostrar_reservas()
 
-            elif opcion == '5':
-
+            elif op == '5':
                 self.gestionar_reserva()
 
-            elif opcion == '6':
-
+            elif op == '6':
                 self.demostrar_sobrecarga()
 
-            elif opcion == '7':
+            elif op == '7':
 
                 print("\n👋 Gracias por usar el sistema")
-                print("📄 Revise 'sistema.log' para más detalles")
-
                 break
 
             else:
-
                 print("❌ Opción inválida")
 
-    # =====================================================
+    # ==========================
     # SUBMENÚ CLIENTES
-    # =====================================================
-
+    # ==========================
     def submenu_clientes(self):
 
         while True:
 
             print("\n" + "-" * 40)
-            print("👤 GESTIÓN DE CLIENTES")
-            print("-" * 40)
+            print("GESTIÓN DE CLIENTES")
 
             print("1. Listar clientes")
             print("2. Crear cliente")
-            print("3. Activar / Desactivar cliente")
+            print("3. Activar / Desactivar")
             print("4. Volver")
 
-            opcion = input("Seleccione una opción: ")
+            op = input("👉 Opción: ")
 
-            # =============================================
+            # =====================
             # LISTAR CLIENTES
-            # =============================================
-
-            if opcion == '1':
-
-                if not self.clientes:
-
-                    print("❌ No hay clientes registrados")
-
-                else:
-
-                    for cliente in self.clientes:
-
-                        print(cliente.info())
-
-                input("\nPresione Enter para continuar...")
-
-            # =============================================
-            # CREAR CLIENTE
-            # =============================================
-
-            elif opcion == '2':
-
-                try:
-
-                    nombre = input("Nombre: ").strip()
-
-                    email = input("Email: ").strip()
-
-                    telefono = input("Teléfono: ").strip()
-
-                    cliente = Cliente(
-                        nombre,
-                        email,
-                        telefono
-                    )
-
-                    self.clientes.append(cliente)
-
-                except ClienteInvalidoError as e:
-
-                    logging.error(e)
-
-                    print(f"❌ Error: {e}")
-
-                else:
-
-                    print("\n✅ Cliente creado exitosamente")
-                    print(f"ID asignado: {cliente.id}")
-
-                finally:
-
-                    print("✔️ Proceso finalizado")
-
-                input("\nPresione Enter para continuar...")
-
-            # =============================================
-            # ACTIVAR / DESACTIVAR CLIENTE
-            # =============================================
-
-            elif opcion == '3':
+            # =====================
+            if op == '1':
 
                 if not self.clientes:
 
@@ -270,23 +170,68 @@ class Sistema:
 
                 else:
 
-                    for cliente in self.clientes:
+                    for c in self.clientes:
+                        print(c.info())
 
-                        print(cliente.info())
+                input("\nPresione Enter...")
+
+            # =====================
+            # CREAR CLIENTE
+            # =====================
+            elif op == '2':
+
+                try:
+
+                    nom = input("Nombre completo: ").strip()
+                    email = input("Email: ").strip()
+                    tel = input("Teléfono: ").strip()
+
+                    cliente = Cliente(nom, email, tel)
+
+                    self.clientes.append(cliente)
+
+                    print(
+                        f"✅ Cliente {cliente.nombre} "
+                        f"creado con ID {cliente.id}"
+                    )
+
+                except ClienteInvalidoError as e:
+
+                    logging.error(e)
+
+                    print(f"❌ Error: {e}")
+
+                except Exception as e:
+
+                    logging.error(e)
+
+                    print(f"❌ Error inesperado: {e}")
+
+                input("\nPresione Enter para continuar...")
+
+            # =====================
+            # ACTIVAR / DESACTIVAR
+            # =====================
+            elif op == '3':
+
+                if not self.clientes:
+
+                    print("❌ No hay clientes")
+
+                else:
+
+                    for c in self.clientes:
+                        print(c.info())
 
                     try:
 
-                        id_cliente = int(
-                            input("ID del cliente: ")
-                        )
+                        id_cli = int(input("ID cliente: "))
 
                         cliente = next(
-
                             (
                                 c for c in self.clientes
-                                if c.id == id_cliente
+                                if c.id == id_cli
                             ),
-
                             None
                         )
 
@@ -298,27 +243,23 @@ class Sistema:
                             )
 
                             accion = input(
-                                "(a) Activar / (d) Desactivar: "
+                                "(a) activar / (d) desactivar: "
                             ).lower()
 
                             if accion == 'a':
 
                                 cliente.activo = True
-
                                 print("✅ Cliente activado")
 
                             elif accion == 'd':
 
                                 cliente.activo = False
-
                                 print("✅ Cliente desactivado")
 
                             else:
-
                                 print("❌ Opción inválida")
 
                         else:
-
                             print("❌ Cliente no encontrado")
 
                     except ValueError as e:
@@ -329,89 +270,72 @@ class Sistema:
 
                 input("\nPresione Enter para continuar...")
 
-            # =============================================
-            # VOLVER
-            # =============================================
-
-            elif opcion == '4':
-
+            elif op == '4':
                 break
 
             else:
-
                 print("❌ Opción inválida")
 
-    # =====================================================
+    # ==========================
     # MOSTRAR SERVICIOS
-    # =====================================================
-
+    # ==========================
     def mostrar_servicios(self):
 
         print("\n" + "=" * 60)
         print("🎯 SERVICIOS DISPONIBLES")
         print("=" * 60)
 
-        for servicio in self.servicios:
+        for s in self.servicios:
 
             estado = (
                 "✅ Disponible"
-                if servicio.disponible
+                if s.disponible
                 else "❌ No disponible"
             )
 
             print(
-                f"ID: {servicio.id} | "
-                f"{servicio.describir()} | "
+                f"ID:{s.id} | "
+                f"{s.describir()} | "
                 f"{estado}"
             )
 
-        input("\nPresione Enter para continuar...")
+        input("\nPresione Enter...")
 
-    # =====================================================
+    # ==========================
     # NUEVA RESERVA
-    # =====================================================
-
+    # ==========================
     def nueva_reserva(self):
 
         if not self.clientes:
 
-            print("❌ Debe existir al menos un cliente")
-
+            print("❌ No hay clientes registrados")
             return
-
-        # =============================================
-        # SELECCIÓN DE CLIENTE
-        # =============================================
 
         print("\n📋 CLIENTES")
 
-        for cliente in self.clientes:
+        for c in self.clientes:
 
             print(
-                f"{cliente.id}. "
-                f"{cliente.nombre}"
+                f"{c.id}. "
+                f"{c.nombre} "
+                f"({'Activo' if c.activo else 'Inactivo'})"
             )
 
         try:
 
-            id_cliente = int(
-                input("Seleccione ID cliente: ")
-            )
+            id_cli = int(input("ID cliente: "))
 
             cliente = next(
-
                 (
                     c for c in self.clientes
-                    if c.id == id_cliente and c.activo
+                    if c.id == id_cli and c.activo
                 ),
-
                 None
             )
 
             if not cliente:
 
-                print("❌ Cliente inválido o inactivo")
-
+                print("❌ Cliente no encontrado")
                 return
 
         except ValueError as e:
@@ -419,133 +343,56 @@ class Sistema:
             logging.error(e)
 
             print("❌ ID inválido")
-
             return
-
-        # =============================================
-        # SELECCIÓN DE SERVICIO
-        # =============================================
 
         print("\n🎯 SERVICIOS")
 
-        for servicio in self.servicios:
+        for s in self.servicios:
 
-            if servicio.disponible:
-
-                print(
-                    f"{servicio.id}. "
-                    f"{servicio.describir()}"
-                )
+            if s.disponible:
+                print(f"{s.id}. {s.describir()}")
 
         try:
 
-            id_servicio = int(
-                input("Seleccione ID servicio: ")
-            )
+            id_ser = int(input("ID servicio: "))
 
             servicio = next(
-
                 (
                     s for s in self.servicios
-                    if s.id == id_servicio and s.disponible
+                    if s.id == id_ser and s.disponible
                 ),
-
                 None
             )
 
             if not servicio:
 
-                raise ServicioNoDisponibleError(
-                    "Servicio no disponible"
-                )
+                print("❌ Servicio no disponible")
+                return
 
         except ValueError as e:
 
             logging.error(e)
 
             print("❌ ID inválido")
-
             return
-
-        except ServicioNoDisponibleError as e:
-
-            logging.error(e)
-
-            print(f"❌ {e}")
-
-            return
-
-        # =============================================
-        # DURACIÓN
-        # =============================================
 
         try:
 
-            horas = float(
-                input("Duración en horas: ")
-            )
+            horas = float(input("Duración en horas: "))
 
             if horas <= 0:
 
-                raise ReservaInvalidaError(
-                    "La duración debe ser positiva"
-                )
+                print("❌ Duración inválida")
+                return
 
         except ValueError as e:
 
             logging.error(e)
 
             print("❌ Número inválido")
-
             return
-
-        except ReservaInvalidaError as e:
-
-            logging.error(e)
-
-            print(f"❌ {e}")
-
-            return
-
-        # =============================================
-        # PARÁMETROS EXTRA
-        # =============================================
 
         extras = {}
-
-        if isinstance(servicio, ReservaSala):
-
-            if input(
-                "¿Agregar proyector? (s/n): "
-            ).lower() == 's':
-
-                extras['proyector'] = True
-
-            if input(
-                "¿Aplicar impuesto? (s/n): "
-            ).lower() == 's':
-
-                extras['impuesto'] = True
-
-        elif isinstance(servicio, AlquilerEquipo):
-
-            if input(
-                "¿Agregar seguro? (s/n): "
-            ).lower() == 's':
-
-                extras['seguro'] = True
-
-        elif isinstance(servicio, Asesoria):
-
-            if input(
-                "¿Modalidad premium? (s/n): "
-            ).lower() == 's':
-
-                extras['premium'] = True
-
-        # =============================================
-        # CREAR RESERVA
-        # =============================================
 
         fecha = datetime.now() + timedelta(days=1)
 
@@ -560,6 +407,9 @@ class Sistema:
             )
 
             self.reservas.append(reserva)
+
+            print("\n✅ Reserva creada exitosamente")
+            print(f"💰 Total: ${reserva.costo}")
 
         except (
             ReservaInvalidaError,
@@ -576,28 +426,11 @@ class Sistema:
 
             print(f"❌ Error inesperado: {e}")
 
-        else:
+        input("\nPresione Enter...")
 
-            print("\n" + "=" * 50)
-            print("✅ RESERVA CREADA EXITOSAMENTE")
-            print("=" * 50)
-
-            print(f"Cliente: {cliente.nombre}")
-            print(f"Servicio: {servicio.nombre}")
-            print(f"Costo total: ${reserva.costo}")
-
-            print("=" * 50)
-
-        finally:
-
-            print("✔️ Proceso de reserva finalizado")
-
-        input("\nPresione Enter para continuar...")
-
-    # =====================================================
+    # ==========================
     # MOSTRAR RESERVAS
-    # =====================================================
-
+    # ==========================
     def mostrar_reservas(self):
 
         if not self.reservas:
@@ -610,87 +443,60 @@ class Sistema:
             print("📋 LISTADO DE RESERVAS")
             print("=" * 60)
 
-            for reserva in self.reservas:
+            for r in self.reservas:
+                print(r.info())
 
-                print(reserva.info())
+        input("\nPresione Enter...")
 
-        input("\nPresione Enter para continuar...")
-
-    # =====================================================
+    # ==========================
     # GESTIONAR RESERVAS
-    # =====================================================
-
+    # ==========================
     def gestionar_reserva(self):
 
         if not self.reservas:
 
-            print("❌ No existen reservas")
-
+            print("❌ No hay reservas")
             return
 
         self.mostrar_reservas()
 
         try:
 
-            id_reserva = int(
-                input("ID de la reserva: ")
-            )
+            id_r = int(input("ID reserva: "))
 
             reserva = next(
-
                 (
                     r for r in self.reservas
-                    if r.id == id_reserva
+                    if r.id == id_r
                 ),
-
                 None
             )
 
             if not reserva:
 
                 print("❌ Reserva no encontrada")
-
                 return
 
             print("\n1. Confirmar")
             print("2. Cancelar")
 
-            opcion = input("Seleccione opción: ")
+            op = input("👉 Opción: ")
 
-            if opcion == '1':
+            if op == '1':
 
-                forma_pago = input(
-                    "Forma de pago: "
-                )
+                forma = input("Forma de pago: ")
 
-                referencia = input(
-                    "Referencia: "
-                ) or None
-
-                if reserva.confirmar(
-                    forma_pago,
-                    referencia
-                ):
+                if reserva.confirmar(forma):
 
                     print("✅ Reserva confirmada")
 
-                else:
+            elif op == '2':
 
-                    print("❌ No fue posible confirmar")
-
-            elif opcion == '2':
-
-                motivo = input(
-                    "Motivo cancelación: "
-                )
+                motivo = input("Motivo cancelación: ")
 
                 if reserva.cancelar(motivo):
 
                     print("✅ Reserva cancelada")
-
-                else:
-
-                    print("❌ No fue posible cancelar")
 
         except ValueError as e:
 
@@ -698,25 +504,20 @@ class Sistema:
 
             print("❌ ID inválido")
 
-        finally:
+        input("\nPresione Enter...")
 
-            print("✔️ Gestión finalizada")
-
-        input("\nPresione Enter para continuar...")
-
-    # =====================================================
-    # DEMOSTRAR SOBRECARGA
-    # =====================================================
-
+    # ==========================
+    # SOBRECARGA
+    # ==========================
     def demostrar_sobrecarga(self):
 
         print("\n" + "=" * 60)
-        print("💰 SOBRECARGA DE MÉTODOS")
+        print("💰 DEMOSTRACIÓN DE SOBRECARGA")
         print("=" * 60)
 
         sala = self.servicios[0]
 
-        print(f"\nServicio: {sala.describir()}")
+        print(f"Servicio: {sala.describir()}")
 
         print(
             f"Sin extras: "
@@ -729,27 +530,16 @@ class Sistema:
         )
 
         print(
-            f"Con proyector: "
-            f"${sala.calcular_costo(3, proyector=True)}"
+            f"Con descuento: "
+            f"${sala.calcular_costo(8, descuento=True)}"
         )
 
-        print(
-            f"Con descuento + impuesto: "
-            f"${sala.calcular_costo(8, descuento=True, impuesto=True)}"
-        )
-
-        print(
-            "\n✅ El mismo método recibe "
-            "diferentes parámetros"
-        )
-
-        input("\nPresione Enter para continuar...")
+        input("\nPresione Enter...")
 
 
-# =========================================================
+# ==========================
 # EJECUCIÓN PRINCIPAL
-# =========================================================
-
+# ==========================
 if __name__ == "__main__":
 
     sistema = Sistema()

@@ -1,56 +1,96 @@
-import re #este es un módulo de expresiones regulares para la validacion de un email
-from datetime import datetime # esto es para obtener la fecha y hora cuando se crea el cliente
-from .excepciones import ClienteInvalidoError # importa la excepción personalizada desde el mismo paquete (models/excepciones.py)
+from model.excepciones import ClienteInvalidoError
+
 
 class Cliente:
-    _id_counter = 1
 
-    #utilizaremoe el metodo constructor init par asignar valores iniciales a los atributos o datos en este caso
+    contador_id = 1
+
     def __init__(self, nombre, email, telefono):
-        self.id = Cliente._id_counter
-        Cliente._id_counter += 1
-        self._nombre = None
-        self._email = None
-        self._telefono = None
-        self.activo = True
-        self.fecha_registro = datetime.now()
-        #hacemos validaciones a traves de setters, un método que permite modificar de manera controlada el valor de un atributo
+
+        self.id = Cliente.contador_id
+        Cliente.contador_id += 1
+
         self.nombre = nombre
         self.email = email
         self.telefono = telefono
 
-    @property #Las propiedades permiten (@property) controlar el acceso a los atributos privados
+        self.activo = True
+
+    # ==========================
+    # GETTER Y SETTER NOMBRE
+    # ==========================
+    @property
     def nombre(self):
         return self._nombre
 
     @nombre.setter
     def nombre(self, valor):
-         if not valor or len(valor.strip()) < 3: #con esto se comprueba que no se ingrese un valor vacío o incorrecto
-            raise ClienteInvalidoError(f"Nombre inválido: '{valor}'. mínimo 3 letras")
+
+        if not valor.strip():
+
+            raise ClienteInvalidoError(
+                "El nombre no puede estar vacío"
+            )
+
         self._nombre = valor.strip().title()
 
+    # ==========================
+    # GETTER Y SETTER EMAIL
+    # ==========================
     @property
     def email(self):
         return self._email
 
     @email.setter
     def email(self, valor):
-        patron = r'^[\w\.-]+@[\w\.-]+\w+$'
-        if not re.match(patron, valor):
-            raise ClienteInvalidoError(f"email inválido: '{valor}'")
-        self.email = valor.lower()
 
- @property
+        if "@" not in valor or "." not in valor:
+
+            raise ClienteInvalidoError(
+                "Correo electrónico inválido"
+            )
+
+        self._email = valor.strip().lower()
+
+    # ==========================
+    # GETTER Y SETTER TELEFONO
+    # ==========================
+    @property
     def telefono(self):
         return self._telefono
 
     @telefono.setter
     def telefono(self, valor):
-        if not valor or len(re.sub(r'\D', '', valor)) < 10:
-            raise ClienteInvalidoError(f"Teléfono inválido: '{valor}'. son como mínimo 10 dígitos")
+
+        if not valor.isdigit():
+
+            raise ClienteInvalidoError(
+                "El teléfono solo debe contener números"
+            )
+
+        if len(valor) < 7:
+
+            raise ClienteInvalidoError(
+                "El teléfono es demasiado corto"
+            )
+
         self._telefono = valor
 
+    # ==========================
+    # MÉTODO INFO
+    # ==========================
     def info(self):
-        estado = "Activo" if self.activo else "Inactivo"
-        return f"ID:{self.id} | {self.nombre} | {self.email} | {estado}"
 
+        estado = (
+            "Activo"
+            if self.activo
+            else "Inactivo"
+        )
+
+        return (
+            f"ID: {self.id} | "
+            f"Nombre: {self.nombre} | "
+            f"Email: {self.email} | "
+            f"Teléfono: {self.telefono} | "
+            f"Estado: {estado}"
+        )
